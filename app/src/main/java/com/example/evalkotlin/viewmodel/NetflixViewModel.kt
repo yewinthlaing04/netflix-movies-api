@@ -19,39 +19,53 @@ class NetflixViewModel : ViewModel() {
     var favorites by mutableStateOf<List<MediaItem>>(emptyList())
         private set
 
+    var isLoading by mutableStateOf(false)
+        private set
+
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
+
     init {
         fetchMovies("batman")
         fetchSeries("dark")
     }
 
     fun fetchMovies(query: String) {
-
         viewModelScope.launch {
-
-            val response = repo.search(query)
-
-            movies = response.titles.map {
-
-                MediaItem(
-                    title = it.title ?: "",
-                    image = it.jawSummary?.backgroundImage?.url
-                )
+            isLoading = true
+            errorMessage = null
+            try {
+                val response = repo.search(query)
+                movies = response.titles.map {
+                    MediaItem(
+                        title = it.title ?: "",
+                        image = it.jawSummary?.backgroundImage?.url
+                    )
+                }
+            } catch (e: Exception) {
+                errorMessage = "Failed to load movies: ${e.localizedMessage}"
+            } finally {
+                isLoading = false
             }
         }
     }
 
     fun fetchSeries(query: String) {
-
         viewModelScope.launch {
-
-            val response = repo.search(query)
-
-            series = response.titles.map {
-
-                MediaItem(
-                    title = it.title ?: "",
-                    image = it.jawSummary?.backgroundImage?.url
-                )
+            isLoading = true
+            errorMessage = null
+            try {
+                val response = repo.search(query)
+                series = response.titles.map {
+                    MediaItem(
+                        title = it.title ?: "",
+                        image = it.jawSummary?.backgroundImage?.url
+                    )
+                }
+            } catch (e: Exception) {
+                errorMessage = "Failed to load series: ${e.localizedMessage}"
+            } finally {
+                isLoading = false
             }
         }
     }

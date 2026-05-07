@@ -17,6 +17,8 @@ fun AppNavigation(
     val movies = viewModel.movies
     val series = viewModel.series
     val favorites = viewModel.favorites
+    val isLoading = viewModel.isLoading
+    val errorMessage = viewModel.errorMessage
 
     NavHost(
         navController = navController,
@@ -27,6 +29,8 @@ fun AppNavigation(
 
             MoviesScreen(
                 movies = movies,
+                isLoading = isLoading,
+                errorMessage = errorMessage,
                 onToggleFavorite = {
                     viewModel.toggleFavorite(it)
                 }
@@ -37,6 +41,8 @@ fun AppNavigation(
 
             SeriesScreen(
                 series = series,
+                isLoading = isLoading,
+                errorMessage = errorMessage,
                 onToggleFavorite = {
                     viewModel.toggleFavorite(it)
                 }
