@@ -1,4 +1,5 @@
 package com.example.evalkotlin.viewmodel
+
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,44 +27,31 @@ class NetflixViewModel : ViewModel() {
         private set
 
     init {
-        fetchMovies("batman")
-        fetchSeries("dark")
+        fetchInitialData()
     }
 
-    fun fetchMovies(query: String) {
+    private fun fetchInitialData() {
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
             try {
-                val response = repo.search(query)
-                movies = response.titles.map {
+                val movieResponse = repo.getTrendingMovies()
+                movies = movieResponse.results.map {
                     MediaItem(
-                        title = it.title ?: "",
-                        image = it.jawSummary?.backgroundImage?.url
+                        title = it.name,
+                        image = it.posterPath
                     )
                 }
-            } catch (e: Exception) {
-                errorMessage = "Failed to load movies: ${e.localizedMessage}"
-            } finally {
-                isLoading = false
-            }
-        }
-    }
 
-    fun fetchSeries(query: String) {
-        viewModelScope.launch {
-            isLoading = true
-            errorMessage = null
-            try {
-                val response = repo.search(query)
-                series = response.titles.map {
+                val seriesResponse = repo.getTrendingSeries()
+                series = seriesResponse.results.map {
                     MediaItem(
-                        title = it.title ?: "",
-                        image = it.jawSummary?.backgroundImage?.url
+                        title = it.name,
+                        image = it.posterPath
                     )
                 }
             } catch (e: Exception) {
-                errorMessage = "Failed to load series: ${e.localizedMessage}"
+                errorMessage = "Failed to load data: ${e.localizedMessage}"
             } finally {
                 isLoading = false
             }
@@ -71,7 +59,6 @@ class NetflixViewModel : ViewModel() {
     }
 
     fun toggleFavorite(item: MediaItem) {
-
         fun update(list: List<MediaItem>) =
             list.map {
                 if (it.title == item.title)
@@ -82,7 +69,6 @@ class NetflixViewModel : ViewModel() {
         movies = update(movies)
         series = update(series)
 
-        favorites =
-            (movies + series).filter { it.isFavorite }
+        favorites = (movies + series).filter { it.isFavorite }.distinctBy { it.title }
     }
 }

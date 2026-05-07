@@ -4,6 +4,9 @@ import com.example.evalkotlin.data.api.ApiInstance
 
 class NetflixRepository {
 
-    suspend fun search(query: String) =
-        ApiInstance.api.search(query)
+    suspend fun getTrendingMovies() = ApiInstance.api.getTrendingMovies()
+
+    suspend fun getTrendingSeries() = ApiInstance.api.getTrendingSeries()
+
+    suspend fun search(query: String) = ApiInstance.api.search(query)
 }

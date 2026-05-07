@@ -1,18 +1,21 @@
 package com.example.evalkotlin.data.api.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class ApiResponse(
-    val titles: List<NetflixItem>
+    val page: Int,
+    val results: List<MovieDto>,
+    @SerializedName("total_pages") val totalPages: Int,
+    @SerializedName("total_results") val totalResults: Int
 )
 
-data class NetflixItem(
-    val title: String?,
-    val jawSummary: JawSummary?
-)
-
-data class JawSummary(
-    val backgroundImage: ImageData?
-)
-
-data class ImageData(
-    val url: String?
+data class MovieDto(
+    val id: Int,
+    val name: String,
+    val description: String,
+    @SerializedName("favorite_count") val favoriteCount: Int,
+    @SerializedName("item_count") val itemCount: Int,
+    @SerializedName("iso_639_1") val iso6391: String,
+    @SerializedName("list_type") val listType: String,
+    @SerializedName("poster_path") val posterPath: String?
 )
