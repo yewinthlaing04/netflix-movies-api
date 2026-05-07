@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface ApiService {
 
     @Headers(
-        "X-RapidAPI-Key: YOUR_API_KEY", // TODO: Replace with your actual RapidAPI Key
+        "X-RapidAPI-Key: apiendpoint_e4b77907-4829-46d9-a8ca-bd74d8d8e198",
         "X-RapidAPI-Host: netflix54.p.rapidapi.com"
     )
 
