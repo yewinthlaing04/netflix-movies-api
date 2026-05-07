@@ -8,8 +8,9 @@ import retrofit2.http.Query
 interface ApiService {
 
     @Headers(
-        "X-RapidAPI-Key: apiendpoint_e4b77907-4829-46d9-a8ca-bd74d8d8e198",
-        "X-RapidAPI-Host: netflix54.p.rapidapi.com"
+        "Content-Type: application/json",
+        "x-rapidapi-host: netflix54.p.rapidapi.com",
+        "x-rapidapi-key: e4bb6ca762msheada7c82a82beccp101260jsn5feff6e358ed"
     )
 
     @GET("search/")
