@@ -1,56 +1,74 @@
 package com.example.evalkotlin.viewmodel
-
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.evalkotlin.data.repository.NetflixRepository
 import com.example.evalkotlin.model.MediaItem
-
 import kotlinx.coroutines.launch
 
 class NetflixViewModel : ViewModel() {
 
-    private val repository = NetflixRepository()
+    private val repo = NetflixRepository()
 
     var movies by mutableStateOf<List<MediaItem>>(emptyList())
         private set
 
-    init {
+    var series by mutableStateOf<List<MediaItem>>(emptyList())
+        private set
 
-        fetchMovies()
+    var favorites by mutableStateOf<List<MediaItem>>(emptyList())
+        private set
+
+    init {
+        fetchMovies("batman")
+        fetchSeries("dark")
     }
 
-    private fun fetchMovies() {
+    fun fetchMovies(query: String) {
 
         viewModelScope.launch {
 
-            try {
+            val response = repo.search(query)
 
-                val response =
-                    repository.searchMovies("batman")
+            movies = response.titles.map {
 
-                movies = response.items.map {
+                MediaItem(
+                    title = it.title ?: "",
+                    image = it.jawSummary?.backgroundImage?.url
+                )
+            }
+        }
+    }
 
-                    MediaItem(
-                        title = it.title ?: "",
-                        image = it.image
-                    )
-                }
+    fun fetchSeries(query: String) {
 
-            } catch (e: Exception) {
+        viewModelScope.launch {
 
-                e.printStackTrace()
+            val response = repo.search(query)
+
+            series = response.titles.map {
+
+                MediaItem(
+                    title = it.title ?: "",
+                    image = it.jawSummary?.backgroundImage?.url
+                )
             }
         }
     }
 
     fun toggleFavorite(item: MediaItem) {
 
-        movies = movies.map {
+        fun update(list: List<MediaItem>) =
+            list.map {
+                if (it.title == item.title)
+                    it.copy(isFavorite = !it.isFavorite)
+                else it
+            }
 
-            if (it.title == item.title)
-                it.copy(isFavorite = !it.isFavorite)
-            else it
-        }
+        movies = update(movies)
+        series = update(series)
+
+        favorites =
+            (movies + series).filter { it.isFavorite }
     }
 }

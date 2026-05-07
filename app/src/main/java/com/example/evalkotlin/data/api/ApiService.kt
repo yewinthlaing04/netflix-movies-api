@@ -1,6 +1,6 @@
 package com.example.evalkotlin.data.api
 
-import com.example.evalkotlin.data.api.dto.NetflixResponse
+import com.example.evalkotlin.data.api.dto.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
@@ -13,9 +13,11 @@ interface ApiService {
     )
 
     @GET("search/")
-    suspend fun searchTitles(
 
-        @Query("query") query: String
-
-    ): NetflixResponse
+    suspend fun search(
+        @Query("query") query: String,
+        @Query("offset") offset: String = "0",
+        @Query("limit_titles") limit: String = "20",
+        @Query("lang") lang: String = "en"
+    ): ApiResponse
 }

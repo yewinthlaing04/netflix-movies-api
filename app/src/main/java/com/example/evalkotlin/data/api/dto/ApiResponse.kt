@@ -1,10 +1,18 @@
 package com.example.evalkotlin.data.api.dto
 
-data class NetflixResponse(
-    val items: List<NetflixItem>
+data class ApiResponse(
+    val titles: List<NetflixItem>
 )
 
 data class NetflixItem(
     val title: String?,
-    val image: String?
+    val jawSummary: JawSummary?
+)
+
+data class JawSummary(
+    val backgroundImage: ImageData?
+)
+
+data class ImageData(
+    val url: String?
 )
