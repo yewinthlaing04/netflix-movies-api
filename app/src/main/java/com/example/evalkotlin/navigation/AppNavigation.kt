@@ -2,45 +2,21 @@ package com.example.evalkotlin.navigation
 
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.evalkotlin.data.moviesList
-import com.example.evalkotlin.data.seriesList
-import com.example.evalkotlin.model.MediaItem
 import com.example.evalkotlin.screens.*
+import com.example.evalkotlin.viewmodel.NetflixViewModel
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: NetflixViewModel = viewModel()
 ) {
-
-    var movies by remember {
-        mutableStateOf(moviesList)
-    }
-
-    var series by remember {
-        mutableStateOf(seriesList)
-    }
-
-    fun toggleFavorite(item: MediaItem) {
-
-        movies = movies.map {
-            if (it.title == item.title)
-                it.copy(isFavorite = !it.isFavorite)
-            else it
-        }
-
-        series = series.map {
-            if (it.title == item.title)
-                it.copy(isFavorite = !it.isFavorite)
-            else it
-        }
-    }
-
-    val favorites =
-        movies.filter { it.isFavorite } +
-                series.filter { it.isFavorite }
+    val movies = viewModel.movies
+    val series = viewModel.series
+    val favorites = viewModel.favorites
 
     NavHost(
         navController = navController,
@@ -52,7 +28,7 @@ fun AppNavigation(
             MoviesScreen(
                 movies = movies,
                 onToggleFavorite = {
-                    toggleFavorite(it)
+                    viewModel.toggleFavorite(it)
                 }
             )
         }
@@ -62,7 +38,7 @@ fun AppNavigation(
             SeriesScreen(
                 series = series,
                 onToggleFavorite = {
-                    toggleFavorite(it)
+                    viewModel.toggleFavorite(it)
                 }
             )
         }
@@ -72,7 +48,7 @@ fun AppNavigation(
             FavoritesScreen(
                 favorites = favorites,
                 onToggleFavorite = {
-                    toggleFavorite(it)
+                    viewModel.toggleFavorite(it)
                 }
             )
         }
